@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- <link rel="stylesheet" href="../assets/style/default.css"> -->
+
+    <title>Cold Day in Big City London</title>
+
+    <script>
+        function toggleText() {
+            coldDay.hidden = !coldDay.hidden;
+            buttonToggle.innerText = (buttonToggle.innerText === "Hide text") ? "Show text": "Hide text";
+            document.title = (document.title === "Cold Day in Big City London") ? "[Text hidden]": "Cold Day in Big City London";
+        }
+
+        function randomFromArray(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function onSubmit() {
+            console.log()
+        }
+
+        function createQuestions(num) {
+
+            if (num > questions.length) {
+                alert("too many");
+                return;
+            };
+
+            // clear previous
+            questionField.innerHTML = "";
+
+            // reset available questions
+            availableQuestions = structuredClone(questions);
+
+            try {
+                for (let i = 0; i < num; i++) {
+
+                    const currentQuestion = randomFromArray(availableQuestions);
+
+                    // remove the question so it can't show up again
+                    availableQuestions.splice(availableQuestions.indexOf(currentQuestion), 1);
+
+                    const container = document.createElement("div");
+
+                    const questionText = document.createElement("h2");
+                    questionText.innerText = currentQuestion.title;
+                    questionText.id = currentQuestion.title;
+
+                    container.appendChild(questionText);
+
+                    for (let p of currentQuestion.options) {
+
+                        const label = document.createElement("label");
+
+                        const option = document.createElement("input");
+                        option.type = "radio";
+                        option.name = currentQuestion.title;
+                        option.required = true;
+                        option.value = p;
+                        label.appendChild(option);
+
+                        const text = document.createTextNode(p);
+                        label.appendChild(text);
+
+                        const br = document.createElement("br");
+                        label.appendChild(br);
+
+
+                        container.appendChild(label);
+                    }
+
+                    questionField.appendChild(container);
+                }
+            } catch(err) {console.log(err)}
+
+            
+
+            const submit = document.createElement("button");
+            submit.innerText = "Check answers";
+            submit.onclick = "onSubmit()";
+            questionField.appendChild(submit);
+
+        }
+
+        function checkAnswers() {
+            const answers = {};
+            questions.forEach(q => {
+                const selected = document.querySelector(`input[name="${q.title}"]:checked`);
+                if (selected) {
+                    document.getElementById(q.title).style.color = (
+                        (selected.value === q.options[q.correct]) ?
+                        "green":
+                        "red"
+                    );
+                }
+            });
+            answers.s;
+        }
+
+        function answerText() {
+
+        }
+
+        function onSubmit(v) {
+            checkAnswers();
+            return false;
+        }
+
+        const questions = [
+
+            {
+                title: "What is the weather like?",
+                options: [
+                    "cold",
+                    "temperate",
+                    "warm",
+                    "hot",
+                ],
+                correct: 0,
+            },
+
+            {
+                title: "What time of day is it?",
+                options: [
+                    "morning",
+                    "day",
+                    "evening",
+                    "night",
+                ],
+                correct: 1,
+            },
+
+            {
+                title: "How is the city's size described?",
+                options: [
+                    "tiny",
+                    "small",
+                    "medium",
+                    "big",
+                ],
+                correct: 3,
+            },
+
+            {
+                title: "What type of location is London?",
+                options: [
+                    "a street",
+                    "a village",
+                    "a town",
+                    "a city",
+                ],
+                correct: 3,
+            },
+
+            {
+                title: "Where does the Cold Day take place?",
+                options: [
+                    "Edinburgh",
+                    "London",
+                    "Manchester",
+                    "Paris",
+                ],
+                correct: 1,
+            },
+
+            {
+                title: "How is the mood on the streets described?",
+                options: [
+                    "peaceful",
+                    "hectic",
+                    "haywire",
+                    "chaotic",
+                ],
+                correct: 3,
+            },
+
+            {
+                title: "Where is the chaos?",
+                options: [
+                    "the streets",
+                    "the office",
+                    "the 50",
+                    "Canary Wharf",
+                ],
+                correct: 0,
+            },
+
+            {
+                title: "What is going haywire?",
+                options: [
+                    "the streets",
+                    "the gangsters",
+                    "the weather",
+                    "the technology",
+                ],
+                correct: 3,
+            },
+
+            {
+                title: "How is the technology described?",
+                options: [
+                    "useful",
+                    "addictive",
+                    "cold",
+                    "haywire",
+                ],
+                correct: 3,
+            },
+
+            {
+                title: "Who was chasing the 50?",
+                options: [
+                    "the gangsters",
+                    "the police",
+                    "the Cold Day",
+                    "the technology",
+                ],
+                correct: 0,
+            },
+
+            {
+                title: "What were the gangsters doing to the 50?",
+                options: [
+                    "chasing them",
+                    "shooting them",
+                    "dealing heroin",
+                    "shooting them while dealing heroin",
+                ],
+                correct: 0,
+            },
+
+            {
+                title: "Who were the gangsters chasing?",
+                options: [
+                    "the 48",
+                    "the 49",
+                    "the 50",
+                    "the Cold Day",
+                ],
+                correct: 2,
+            },
+
+
+        ]
+
+        let availableQuestions = structuredClone(questions);
+    </script>
+</head>
+<body>
+    <div id="coldDay">
+        <h1>Cold Day in Big City London</h1>
+        <p>Chaos on the streets as all technology goes haywire. The gangsters were seen chasing the 50.</p>
+    </div>
+    <button id="buttonToggle" onclick="toggleText()">Hide text</button>
+    <br>
+    <p>Generate <input type="number" id="number" value="5.0"> questions. <button onclick="createQuestions(number.value)">Generate</button></p>
+    <form id="questionField" onsubmit="return onSubmit(questionField['What is going haywire?'])"></form>
+</body>
+</html>
